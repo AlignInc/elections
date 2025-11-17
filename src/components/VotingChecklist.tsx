@@ -86,7 +86,7 @@ export default function VotingChecklist() {
 
         <div className="mt-4">
           <div className="flex justify-between items-center text-white text-sm mb-2">
-            <span>完成進度 Progress</span>
+            <span>{t('votingChecklist.progressLabel')}</span>
             <span className="font-bold">{completedCount}/{totalCount}</span>
           </div>
           <div className="w-full bg-green-700 rounded-full h-3 overflow-hidden">

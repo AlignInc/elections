@@ -6,7 +6,7 @@ const resources = {
     translation: {
       common: {
         languageChinese: '繁體中文',
-        languageEnglish: 'English',
+        languageEnglish: '英文',
         back: '返回',
         backHome: '返回主頁',
         loading: '載入中',
@@ -49,7 +49,7 @@ const resources = {
       },
       languageToggle: {
         zhLabel: '繁體中文',
-        enLabel: 'English'
+        enLabel: '英文'
       },
       countdown: {
         title: '距離投票日',
@@ -72,7 +72,7 @@ const resources = {
         searchByName: '輸入姓名查找',
         searchByNameDesc: '直接輸入候選人中文或英文姓名搜尋',
         inputNameLabel: '輸入候選人姓名',
-        inputNamePlaceholder: '例如：李慧琼、吳秋北、Starry Lee',
+        inputNamePlaceholder: '例如：李慧琼、吳秋北',
         inputAddressLabel: '輸入地址',
         inputAddressPlaceholder: '例如：銅鑼灣、中環、深水埗',
         searchButton: '搜尋',
@@ -291,7 +291,7 @@ const resources = {
           'In case of any doubt, please refer to official information.'
       },
       languageToggle: {
-        zhLabel: '繁體中文',
+        zhLabel: 'Traditional Chinese',
         enLabel: 'English'
       },
       countdown: {

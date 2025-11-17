@@ -93,7 +93,7 @@ export default function ElectionHome({ onNavigate }: ElectionHomeProps) {
                   </p>
 
                   <div className="hidden sm:flex mt-4 sm:mt-6 items-center text-blue-600 font-medium text-sm">
-                    <span>開始使用</span>
+                    <span>{t('home.getStarted')}</span>
                     <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>

@@ -100,7 +100,9 @@ export default function VotingSteps() {
 
                 <div className="flex-1 pb-8">
                   <div className="flex items-baseline gap-3 mb-2">
-                    <span className="text-blue-600 font-bold text-sm">步驟 {index + 1}</span>
+                    <span className="text-blue-600 font-bold text-sm">
+                      {isZh ? `步驟 ${index + 1}` : `Step ${index + 1}`}
+                    </span>
                     <h4 className="text-lg font-bold text-gray-900">
                       {isZh ? step.title_zh : step.title_en}
                     </h4>

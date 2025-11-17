@@ -9,12 +9,14 @@ interface ElectionInfoProps {
 interface Section {
   id: string;
   title: string;
+  titleEn?: string;
   icon: any;
   content: JSX.Element;
 }
 
 export default function ElectionInfo({ onBack }: ElectionInfoProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isZh = i18n.language.startsWith('zh');
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['intro']));
 
   const toggleSection = (sectionId: string) => {
@@ -33,6 +35,7 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
     {
       id: 'intro',
       title: '選舉簡介',
+      titleEn: 'Election Overview',
       icon: FileText,
       content: (
         <div className="space-y-4">
@@ -65,6 +68,7 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
     {
       id: 'nomination',
       title: '提名期',
+      titleEn: 'Nomination Period',
       icon: Calendar,
       content: (
         <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-lg p-5">
@@ -81,6 +85,7 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
     {
       id: 'voting-arrangement',
       title: '投票安排',
+      titleEn: 'Polling Arrangements',
       icon: CheckCircle,
       content: (
         <div className="space-y-4">
@@ -105,6 +110,7 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
     {
       id: 'eligibility',
       title: '投票資格',
+      titleEn: 'Who Can Vote',
       icon: Users,
       content: (
         <div className="space-y-4">
@@ -126,6 +132,7 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
     {
       id: 'gc',
       title: '地方選區',
+      titleEn: 'Geographical Constituencies',
       icon: MapPin,
       content: (
         <div className="space-y-4">
@@ -182,6 +189,7 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
     {
       id: 'how-to-vote',
       title: '如何投票',
+      titleEn: 'How to Vote',
       icon: CheckCircle,
       content: (
         <div className="space-y-4">
@@ -232,6 +240,7 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
     {
       id: 'documents',
       title: '申領選票所需的文件',
+      titleEn: 'Documents Required for Ballot',
       icon: FileText,
       content: (
         <div className="space-y-4">
@@ -283,6 +292,7 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
     {
       id: 'special-queue',
       title: '為有需要的選民設立特別隊伍',
+      titleEn: 'Special Queue for Voters in Need',
       icon: Users,
       content: (
         <div className="space-y-4">
@@ -331,6 +341,7 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
     {
       id: 'notices',
       title: '選民須知',
+      titleEn: 'Important Notices for Voters',
       icon: AlertCircle,
       content: (
         <div className="space-y-4">
@@ -432,7 +443,9 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
                     <div className="flex-shrink-0 w-10 h-10 bg-violet-100 rounded-lg flex items-center justify-center">
                       <Icon className="w-5 h-5 text-violet-600" />
                     </div>
-                    <h2 className="text-lg font-bold text-gray-900">{section.title}</h2>
+                    <h2 className="text-lg font-bold text-gray-900">
+                      {isZh ? section.title : section.titleEn || section.title}
+                    </h2>
                   </div>
                   <div className="flex-shrink-0">
                     {isExpanded ? (
@@ -456,12 +469,15 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
         </div>
 
         <div className="mt-8 bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-200 rounded-xl p-5">
-          <p className="text-sm text-blue-900 mb-1">
-            <strong>資料來源：</strong>香港特別行政區選舉管理委員會
-          </p>
-          <p className="text-xs text-blue-700">
-            Source: Electoral Affairs Commission, Hong Kong SAR
-          </p>
+          {isZh ? (
+            <p className="text-sm text-blue-900">
+              {t('common.officialSource')}
+            </p>
+          ) : (
+            <p className="text-sm text-blue-900">
+              {t('common.officialSourceEn')}
+            </p>
+          )}
         </div>
       </div>
     </div>

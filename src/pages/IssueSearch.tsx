@@ -268,7 +268,8 @@ interface ResultCardProps {
 }
 
 function ResultCard({ result, onSelectCandidate }: ResultCardProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isZh = i18n.language.startsWith('zh');
   const [loadingCandidate, setLoadingCandidate] = useState(false);
 
   const handleSelectCandidate = async () => {
@@ -297,14 +298,21 @@ function ResultCard({ result, onSelectCandidate }: ResultCardProps) {
 
           <div className="flex-1">
             <h4 className="text-xl font-bold text-gray-900 mb-1">
-              {result.candidate.name_zh}
+              {isZh
+                ? result.candidate.name_zh
+                : result.candidate.name_en || result.candidate.name_zh}
             </h4>
             <p className="text-sm text-gray-600 mb-2">
-              {result.candidate.name_en}
+              {isZh
+                ? result.candidate.name_en
+                : result.candidate.name_zh}
             </p>
             <div className="flex flex-wrap gap-2">
               <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
-                {result.candidate.constituency.name_zh}
+                {isZh
+                  ? result.candidate.constituency.name_zh
+                  : result.candidate.constituency.name_en ||
+                    result.candidate.constituency.name_zh}
               </span>
               {result.candidate.party_affiliation && (
                 <span className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">
@@ -342,7 +350,7 @@ function ResultCard({ result, onSelectCandidate }: ResultCardProps) {
                   className="inline-flex items-center gap-1 px-2 py-1 bg-green-50 text-green-700 text-xs font-medium rounded"
                 >
                   <span>{topic.icon}</span>
-                  <span>{topic.name_zh}</span>
+                  <span>{isZh ? topic.name_zh : topic.name_en || topic.name_zh}</span>
                 </span>
               ))}
             </div>

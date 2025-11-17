@@ -14,7 +14,8 @@ interface CandidateSearchProps {
 type SearchMode = 'select' | 'location' | 'browse' | 'name';
 
 export default function CandidateSearch({ onBack, onSelectCandidate }: CandidateSearchProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isZh = i18n.language.startsWith('zh');
 
   const [searchMode, setSearchMode] = useState<SearchMode>('select');
   const [address, setAddress] = useState('');
@@ -176,11 +177,11 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
   };
 
   const groupedConstituencies = constituencies.reduce((acc, constituency) => {
-    const region = constituency.region || '其他';
-    if (!acc[region]) {
-      acc[region] = [];
+    const regionKey = constituency.region || '其他';
+    if (!acc[regionKey]) {
+      acc[regionKey] = [];
     }
-    acc[region].push(constituency);
+    acc[regionKey].push(constituency);
     return acc;
   }, {} as Record<string, Constituency[]>);
 
@@ -437,10 +438,27 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
               </div>
             ) : (
               <div className="space-y-6">
-                {Object.entries(groupedConstituencies).map(([region, regionConstituencies]) => (
-                  <div key={region} className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                {Object.entries(groupedConstituencies).map(([regionKey, regionConstituencies]) => {
+                  const displayRegionName = (() => {
+                    if (isZh) return regionKey;
+                    switch (regionKey) {
+                      case '香港島':
+                        return 'Hong Kong Island';
+                      case '九龍':
+                        return 'Kowloon';
+                      case '新界':
+                        return 'New Territories';
+                      case '其他':
+                        return 'Others';
+                      default:
+                        return regionKey;
+                    }
+                  })();
+
+                  return (
+                    <div key={regionKey} className="bg-white rounded-2xl shadow-lg overflow-hidden">
                     <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4">
-                      <h3 className="text-xl font-bold text-white">{region}</h3>
+                      <h3 className="text-xl font-bold text-white">{displayRegionName}</h3>
                     </div>
 
                     <div className="p-4 space-y-2">
@@ -470,7 +488,8 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                       ))}
                     </div>
                   </div>
-                ))}
+                );
+                })}
               </div>
             )}
           </div>
@@ -483,16 +502,41 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                 <div>
                   <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium mb-3">
                     <Building2 className="w-4 h-4" />
-                    <span>{(constituency || selectedConstituency)?.type}</span>
+                    <span>
+                      {(() => {
+                        const type = (constituency || selectedConstituency)?.type;
+                        switch (type) {
+                          case '地方選區':
+                            return t('constituencyBrowse.types.gc');
+                          case '功能界別':
+                            return t('constituencyBrowse.types.fc');
+                          case '選舉委員會界別':
+                            return t('constituencyBrowse.types.ecc');
+                          default:
+                            return type;
+                        }
+                      })()}
+                    </span>
                   </div>
-                  <h2 className="text-3xl font-bold mb-1">{(constituency || selectedConstituency)?.name_zh}</h2>
-                  <p className="text-blue-100">{(constituency || selectedConstituency)?.name_en}</p>
+                  <h2 className="text-3xl font-bold mb-1">
+                    {isZh
+                      ? (constituency || selectedConstituency)?.name_zh
+                      : (constituency || selectedConstituency)?.name_en ??
+                        (constituency || selectedConstituency)?.name_zh}
+                  </h2>
+                  <p className="text-blue-100">
+                    {isZh
+                      ? (constituency || selectedConstituency)?.name_en
+                      : (constituency || selectedConstituency)?.name_zh}
+                  </p>
                 </div>
                 <div className="text-right">
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl">
                     <span className="text-2xl font-bold">{(constituency || selectedConstituency)?.seats}</span>
                   </div>
-                  <p className="text-xs text-blue-100 mt-1">議席</p>
+                  <p className="text-xs text-blue-100 mt-1">
+                    {t('common.seatsLabel')}
+                  </p>
                 </div>
               </div>
 
@@ -505,9 +549,9 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
 
             <div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">
-                {t('common.listCandidatesPrefix')}{' '}
-                {candidates.length}{' '}
-                {t('common.candidatesCountSuffix')}
+                {t('common.listCandidatesPrefix')}
+                {candidates.length}
+                {t('common.listCandidatesSuffix')}
               </h3>
 
               {loading ? (

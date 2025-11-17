@@ -105,11 +105,19 @@ ${candidate.occupation ? `Occupation: ${candidate.occupation}` : ''}`;
                   <span className="inline-flex items-center justify-center w-10 h-10 bg-white text-blue-700 text-lg font-bold rounded-lg shadow-md">
                     {candidate.candidate_number}
                   </span>
-                  <h1 className="text-3xl sm:text-4xl font-bold">{candidate.name_zh}</h1>
+                  <h1 className="text-3xl sm:text-4xl font-bold">
+                    {isZh ? candidate.name_zh : candidate.name_en || candidate.name_zh}
+                  </h1>
                 </div>
-                <p className="text-blue-100 text-xl mb-2">{candidate.name_en}</p>
-                <p className="text-blue-50 text-lg font-medium">{candidate.constituency_zh}選區</p>
-                <p className="text-blue-200 text-sm">{candidate.constituency_en}</p>
+                <p className="text-blue-100 text-xl mb-2">
+                  {isZh ? candidate.name_en : candidate.name_zh}
+                </p>
+                <p className="text-blue-50 text-lg font-medium">
+                  {isZh ? `${candidate.constituency_zh}選區` : candidate.constituency_en || candidate.constituency_zh}
+                </p>
+                <p className="text-blue-200 text-sm">
+                  {isZh ? candidate.constituency_en : candidate.constituency_zh}
+                </p>
               </div>
             </div>
           </div>
@@ -169,7 +177,7 @@ ${candidate.occupation ? `Occupation: ${candidate.occupation}` : ''}`;
                           className="inline-flex items-center gap-1 px-2 py-1 bg-green-50 text-green-700 text-xs font-medium rounded"
                         >
                           <span>{topic.icon}</span>
-                          <span>{topic.name_zh}</span>
+                          <span>{isZh ? topic.name_zh : topic.name_en || topic.name_zh}</span>
                         </span>
                       ))}
                     </div>
