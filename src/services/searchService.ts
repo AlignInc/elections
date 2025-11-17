@@ -185,6 +185,6 @@ export const searchService = {
   },
 
   getDisclaimer(): string {
-    return '結果僅展示政綱中與你輸入關鍵詞相關的內容，不構成任何形式的推薦或評價。';
+    return '結果僅顯示政綱中與你輸入關鍵詞相關的內容，不構成任何形式的建議或評價。';
   }
 };

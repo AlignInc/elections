@@ -41,7 +41,7 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
             《基本法》附件二訂明立法會由90名議員組成，分別通過選舉委員會界別選舉（40席）、功能界別選舉（30席），以及地方選區選舉（20席）產生。立法會任期為四年，而第七屆立法會任期將於2025年12月31日完結。
           </p>
           <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
-            <h4 className="font-bold text-purple-900 mb-2">議席分布</h4>
+            <h4 className="font-bold text-purple-900 mb-2">議席分佈</h4>
             <ul className="space-y-2 text-sm text-purple-800">
               <li className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-purple-600 rounded-full"></span>
@@ -95,7 +95,7 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
             </p>
           </div>
           <p className="text-gray-700 text-sm leading-relaxed">
-            各投票站的預計輪候時間等資料會在投票日於投票站外及此選舉專用網站展示。選民可以選擇在較少人的時間前往投票站投票。
+            各投票站的預計輪候時間等資料會在投票日於投票站外及此選舉專用網站展示。選民可選擇在人較少的時段前往投票站投票。
           </p>
         </div>
       )

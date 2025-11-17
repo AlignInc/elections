@@ -59,7 +59,7 @@ export default function VotingDayGuide({ onBack }: VotingDayGuideProps) {
                 <p className="font-bold text-gray-900">07:30 - 23:30</p>
               </div>
             </div>
-            <p className="text-xs text-gray-600">16 hours (extended)</p>
+            <p className="text-xs text-gray-600">16-hour extended polling hours</p>
           </div>
 
           <a
@@ -97,14 +97,14 @@ export default function VotingDayGuide({ onBack }: VotingDayGuideProps) {
             <h3 className="text-xl font-bold mb-3">投票須知</h3>
             <div className="space-y-2 text-sm leading-relaxed">
               <p>• 每名選民只可投票一次，並只可選擇一名候選人</p>
-              <p>• 投票站內嚴禁拍照、攝錄或使用通訊設備</p>
+              <p>• 投票站內嚴禁拍照、錄影或使用通訊設備</p>
               <p>• 請保持投票的私密性，不要向他人透露你的投票選擇</p>
               <p>• 投票站內禁止進行任何拉票或宣傳活動</p>
               <p>• 如有疑問或遇到困難，請向投票站工作人員尋求協助</p>
             </div>
             <div className="mt-4 pt-4 border-t border-blue-500">
               <p className="text-xs text-blue-100">
-                Important Reminders: Each voter can vote only once for one candidate. Photography and campaigning are prohibited inside polling stations. Keep your vote private.
+                Important reminders: Each voter can vote only once for one candidate. Photography and campaigning are prohibited inside polling stations. Please keep your vote private.
               </p>
             </div>
           </div>
@@ -117,7 +117,7 @@ export default function VotingDayGuide({ onBack }: VotingDayGuideProps) {
           >
             <div className="flex items-center justify-center gap-2 mb-2">
               <p className="text-sm text-gray-600">
-                如需更多資訊，請瀏覽選舉管理委員會官方網站
+                如需更多資訊，請瀏覽選舉管理委員會官方網站。
               </p>
               <ExternalLink className="w-4 h-4 text-gray-600 group-hover:translate-x-1 transition-transform" />
             </div>

@@ -40,7 +40,7 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
 
   const handleSearch = async () => {
     if (!queryText.trim() && selectedTopics.length === 0) {
-      setError('請輸入關鍵詞或選擇至少一個議題標籤');
+      setError('請輸入關鍵詞或選擇至少一個議題標籤。');
       return;
     }
 
@@ -56,7 +56,7 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
 
       setResults(data);
     } catch (err) {
-      setError('搜索失敗，請稍後再試');
+      setError('搜尋失敗，請稍後再試。');
       console.error(err);
     } finally {
       setLoading(false);
@@ -90,10 +90,10 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
             <Search className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            按議題關鍵詞查政策
+            按議題關鍵詞查找政綱
           </h1>
           <p className="text-gray-600">
-            輸入關心的議題，找出相關候選人的政綱內容
+            輸入你關心的議題，找出相關候選人的政綱內容。
           </p>
         </div>
 
@@ -149,12 +149,12 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
                 {loading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>搜索中...</span>
+                    <span>搜尋中...</span>
                   </>
                 ) : (
                   <>
                     <Search className="w-5 h-5" />
-                    <span>搜索政綱</span>
+                    <span>搜尋政綱</span>
                   </>
                 )}
               </button>
@@ -189,15 +189,15 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
             {results.length === 0 ? (
               <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
                 <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 text-lg mb-2">沒有找到相關政綱內容</p>
-                <p className="text-gray-400 text-sm">請嘗試使用不同的關鍵詞或議題標籤</p>
+                <p className="text-gray-500 text-lg mb-2">未找到相關政綱內容</p>
+                <p className="text-gray-400 text-sm">請嘗試使用不同的關鍵詞或議題標籤。</p>
               </div>
             ) : (
               <>
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-2xl font-bold text-gray-900">
-                      搜索結果
+                      搜尋結果
                     </h2>
                     <span className="text-sm text-gray-600">
                       共找到 {results.length} 位候選人
@@ -208,7 +208,7 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
                     <div className="mb-8">
                       <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <span className="text-green-600">📍</span>
-                        你所在選區
+                        你所屬選區
                       </h3>
                       <div className="space-y-4">
                         {userConstituencyResults.map((result) => (

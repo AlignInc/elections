@@ -82,10 +82,10 @@ export default function ConstituencyBrowse({ onBack, onSelectCandidate }: Consti
             <Building2 className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            按選區瀏覽候選人
+            按選區瀏覽候選人資料
           </h1>
           <p className="text-gray-600">
-            選擇具體選區，瀏覽該選區所有候選人的詳細資料
+            選擇具體選區，瀏覽該選區所有候選人的詳細資料。
           </p>
         </div>
 
@@ -125,7 +125,7 @@ export default function ConstituencyBrowse({ onBack, onSelectCandidate }: Consti
               </div>
             ) : constituencies.length === 0 ? (
               <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
-                <p className="text-gray-500">此類型暫無選區資料</p>
+                <p className="text-gray-500">此類型暫未有選區資料。</p>
               </div>
             ) : (
               <div className="space-y-6">
@@ -210,7 +210,7 @@ export default function ConstituencyBrowse({ onBack, onSelectCandidate }: Consti
                 />
               ) : (
                 <div className="bg-white rounded-xl border-2 border-gray-200 p-12 text-center">
-                  <p className="text-gray-500">本選區暫無候選人資料</p>
+                  <p className="text-gray-500">本選區暫未有候選人資料。</p>
                 </div>
               )}
             </div>

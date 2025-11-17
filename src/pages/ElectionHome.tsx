@@ -49,13 +49,13 @@ export default function ElectionHome({ onNavigate }: ElectionHomeProps) {
             <span className="text-4xl sm:text-6xl">🗳️</span>
           </div>
           <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1 sm:mb-3">
-            投入選舉 共創未來
+            投入選舉，共創未來
           </h1>
           <h2 className="text-base sm:text-xl md:text-2xl font-semibold text-blue-600 mb-2 sm:mb-4">
             Join the Election, Together We Create the Future
           </h2>
           <p className="text-sm sm:text-lg text-gray-600 max-w-3xl mx-auto">
-            匯集2025年立法會換屆選舉資訊，助你輕鬆查找候選人、比較政綱立場、了解投票流程，讓你的選票更有意義。
+            匯集2025年立法會換屆選舉資訊，助你輕鬆查找候選人、比較政綱立場、了解投票流程，讓每一票更有意義。
           </p>
         </div>
 
@@ -102,11 +102,11 @@ export default function ElectionHome({ onNavigate }: ElectionHomeProps) {
         <div className="hidden sm:block bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
           <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
             <span className="text-blue-600">📋</span>
-            關於本資料
+            關於本系統
           </h3>
           <div className="space-y-2 text-sm text-gray-600 leading-relaxed">
             <p>
-              • 本系統整合2025年立法會換屆選舉地方選區所有51位直選候選人的基本資料及政綱
+              • 本系統整合2025年立法會換屆選舉地方選區全部 51 位直選候選人的基本資料及政綱
             </p>
             <p>
               • 資料來源：香港選舉管理委員會官方網站
@@ -115,7 +115,7 @@ export default function ElectionHome({ onNavigate }: ElectionHomeProps) {
               • 投票日期：2025年12月7日（星期日）
             </p>
             <p className="pt-2 text-xs text-gray-500">
-              如有疑問，請以官方公布資料為準
+              如有疑問，請以官方公布的資料為準。
             </p>
           </div>
         </div>

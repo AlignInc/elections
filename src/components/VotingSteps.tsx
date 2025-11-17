@@ -15,7 +15,7 @@ const votingSteps: VotingStep[] = [
     icon: MapPin,
     title_zh: '抵達投票站',
     title_en: 'Arrive at Polling Station',
-    description_zh: '在投票時間內（通常為上午7:30至晚上10:30）前往你的指定投票站。投票站地點已印在選民登記證上。',
+    description_zh: '在投票時間內（通常為上午7:30至晚上10:30）前往你的指定投票站。投票站地點已印在選民通知卡或選民登記證上。',
     description_en: 'Go to your assigned polling station during voting hours (typically 7:30 AM to 10:30 PM). The location is printed on your voter registration card.',
     tip_zh: '建議避開早上及傍晚的繁忙時段',
     tip_en: 'Avoid peak hours in the morning and evening'
@@ -44,7 +44,7 @@ const votingSteps: VotingStep[] = [
     title_en: 'Mark Your Ballot',
     description_zh: '進入投票間，在選票上你所選擇的候選人姓名旁的空格內填上「✓」或「✗」號。',
     description_en: 'Enter the voting booth and mark "✓" or "✗" next to your chosen candidate\'s name on the ballot.',
-    tip_zh: '只可選擇一名候選人，選票不可摺疊或損毀',
+    tip_zh: '只可選擇一名候選人。選票不可摺疊或損毀。',
     tip_en: 'Select only one candidate, do not fold or damage ballot'
   },
   {

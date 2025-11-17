@@ -31,7 +31,7 @@ export default function CandidateDetail({ candidate, onBack }: CandidateDetailPr
   const handleShare = async () => {
     const shareText = `${candidate.name_zh} - ${candidate.constituency_zh}選區候選人
 候選人編號：${candidate.candidate_number}
-政治聯繫：${candidate.party_affiliation || candidate.affiliation || '獨立候選人'}
+政治背景：${candidate.party_affiliation || candidate.affiliation || '獨立候選人'}
 ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
 
     try {
@@ -51,7 +51,7 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
           alert('候選人資料已複製到剪貼簿！');
         } catch (clipboardErr) {
           console.error('分享失敗', clipboardErr);
-          alert('分享功能暫時無法使用');
+          alert('分享功能暫時無法使用，請稍後再試。');
         }
       }
     }
@@ -124,7 +124,7 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
               {(candidate.party_affiliation || candidate.affiliation) && (
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 border border-purple-200 sm:col-span-2">
                   <h3 className="text-sm font-semibold text-purple-900 mb-1">
-                    政治聯繫 Political Affiliation
+                    政治背景 Political Affiliation
                   </h3>
                   <p className="text-gray-900 font-medium">
                     {candidate.party_affiliation || candidate.affiliation || '獨立候選人'}
@@ -137,7 +137,7 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border-2 border-blue-200 shadow-md">
                 <h2 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
                   <FileText className="w-5 h-5 text-blue-600" />
-                  競選訊息 Electoral Message
+                  競選簡介 Electoral Message
                 </h2>
 
                 {!loadingTopics && topicTags.length > 0 && (
@@ -242,13 +242,13 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
             </div>
             <div>
               <p className="text-sm font-bold text-blue-900 mb-1">
-                投票日期：2025年12月7日（星期日）
+                投票日期：2025 年 12 月 7 日（星期日）
               </p>
               <p className="text-sm text-blue-800 mb-2">
                 投票時間：上午7:30至晚上10:30
               </p>
               <p className="text-xs text-blue-700">
-                以上資料由候選人提供，並來自香港選舉管理委員會官方網站
+                以上資料由候選人提供，並整理自香港選舉管理委員會官方網站。
               </p>
             </div>
           </div>

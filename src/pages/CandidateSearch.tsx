@@ -101,10 +101,10 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
         setConstituency(result);
         await loadCandidates(result.id);
       } else {
-        setError('找不到對應選區，請嘗試輸入更具體的地址（例如：銅鑼灣、中環、深水埗）');
+        setError('找不到對應選區，請嘗試輸入更具體的地址（例如：銅鑼灣、中環、深水埗等）。');
       }
     } catch (err) {
-      setError('搜索失敗，請稍後再試');
+      setError('搜尋失敗，請稍後再試。');
       console.error(err);
     } finally {
       setLoading(false);
@@ -150,12 +150,12 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
       const results = await candidateService.searchCandidates(candidateName);
 
       if (results.length === 0) {
-        setError('找不到相關候選人，請嘗試使用不同的關鍵詞');
+        setError('找不到相關候選人，請嘗試使用其他關鍵詞。');
       }
 
       setCandidates(results);
     } catch (err) {
-      setError('搜索失敗，請稍後再試');
+      setError('搜尋失敗，請稍後再試。');
       console.error(err);
     } finally {
       setLoading(false);
@@ -279,7 +279,7 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                     輸入姓名查找
                   </h3>
                   <p className="text-sm text-gray-600">
-                    直接輸入候選人中文或英文姓名搜索
+                    直接輸入候選人中文或英文姓名搜尋
                   </p>
                 </div>
                 <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-orange-600 group-hover:translate-x-1 transition-all" />
@@ -301,7 +301,7 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                   value={candidateName}
                   onChange={(e) => setCandidateName(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearchByName()}
-                  placeholder="例如：李慧琼、吳秋北、Starry LEE"
+                  placeholder="例如：李慧琼、吳秋北、Starry Lee"
                   className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:outline-none transition-colors"
                 />
                 <button
@@ -309,7 +309,7 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                   disabled={loading}
                   className="px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-xl font-medium hover:from-orange-700 hover:to-orange-800 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : '搜索'}
+                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : '搜尋'}
                 </button>
               </div>
             </div>
@@ -318,7 +318,7 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
               <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-6 flex items-start gap-3">
                 <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-red-900 mb-1">搜索失敗</h3>
+                  <h3 className="font-semibold text-red-900 mb-1">搜尋失敗</h3>
                   <p className="text-red-700">{error}</p>
                 </div>
               </div>
@@ -327,7 +327,7 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
             {!loading && candidates.length > 0 && (
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  搜索結果（共 {candidates.length} 位）
+                  搜尋結果（共 {candidates.length} 位）
                 </h3>
                 <CandidateList
                   candidates={candidates}
@@ -359,7 +359,7 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                   disabled={loading}
                   className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-medium hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : '搜索'}
+                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : '搜尋'}
                 </button>
               </div>
             </div>
@@ -368,7 +368,7 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
               <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-6 flex items-start gap-3">
                 <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-red-900 mb-1">搜索失敗</h3>
+                  <h3 className="font-semibold text-red-900 mb-1">搜尋失敗</h3>
                   <p className="text-red-700">{error}</p>
                 </div>
               </div>

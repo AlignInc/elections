@@ -31,7 +31,7 @@ const defaultChecklistItems: Omit<ChecklistItem, 'completed'>[] = [
   },
   {
     id: 'transport',
-    label_zh: '計劃前往投票站的交通路線',
+    label_zh: '計劃前往投票站的交通安排',
     label_en: 'Plan transportation to polling station'
   },
   {

@@ -39,7 +39,7 @@ export default function CandidateList({ candidates, onSelectCandidate }: Candida
               <div className="text-left">
                 <h3 className="font-semibold text-gray-900">{constituency}</h3>
                 <p className="text-sm text-gray-500">
-                  {constituencyCandidates.length} 位候選人
+                  共 {constituencyCandidates.length} 位候選人
                 </p>
               </div>
             </div>
@@ -69,7 +69,8 @@ export default function CandidateList({ candidates, onSelectCandidate }: Candida
                       <h4 className="font-semibold text-gray-900">{candidate.name_zh}</h4>
                     </div>
                     <p className="text-sm text-gray-600 mt-0.5">
-                      {candidate.affiliation || '獨立'} {candidate.occupation ? `· ${candidate.occupation}` : ''}
+                      {candidate.affiliation || '獨立候選人'}
+                      {candidate.occupation ? `｜${candidate.occupation}` : ''}
                     </p>
                   </div>
                 </button>

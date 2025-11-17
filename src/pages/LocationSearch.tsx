@@ -73,7 +73,7 @@ export default function LocationSearch({ onBack, onSelectCandidate }: LocationSe
       }
     } catch (err) {
       console.error('Search error:', err);
-      setError('搜索失敗。請檢查網絡連接或嘗試輸入地區名稱（例如：太古城、銅鑼灣）');
+      setError('搜尋失敗。請檢查網絡連接，或嘗試輸入地區名稱（例如：太古城、銅鑼灣）。');
     } finally {
       setLoading(false);
     }
@@ -115,7 +115,7 @@ export default function LocationSearch({ onBack, onSelectCandidate }: LocationSe
             按所在位置查候選人
           </h1>
           <p className="text-sm sm:text-base text-gray-600 px-4">
-            使用定位或輸入地址，查找你所屬選區的候選人資訊
+            使用定位或輸入地址，查找你所屬選區的候選人資料
           </p>
         </div>
 
@@ -123,7 +123,7 @@ export default function LocationSearch({ onBack, onSelectCandidate }: LocationSe
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-6 sm:p-8">
             <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
               <p className="text-blue-900 text-xs sm:text-sm leading-relaxed">
-                需要使用你的定位，以查找對應選區及候選人。亦可手動輸入地址。
+                本功能需要使用你的定位，以查找對應選區及候選人，亦可選擇手動輸入地址。
               </p>
             </div>
 
@@ -174,11 +174,11 @@ export default function LocationSearch({ onBack, onSelectCandidate }: LocationSe
                     disabled={loading || !address.trim()}
                     className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-sm sm:text-base whitespace-nowrap"
                   >
-                    搜索
+                    搜尋
                   </button>
                 </div>
                 <div className="mt-2 text-xs text-gray-500 space-y-1">
-                  <p className="font-medium">提示：可搜索以下內容</p>
+                  <p className="font-medium">提示：可搜尋以下內容</p>
                   <ul className="list-disc list-inside space-y-0.5 ml-1">
                     <li>地區名稱：太古城、銅鑼灣、中環、旺角</li>
                     <li>完整地址：太古城道100號、彌敦道100號</li>
@@ -215,7 +215,7 @@ export default function LocationSearch({ onBack, onSelectCandidate }: LocationSe
                   onClick={handleReset}
                   className="text-white hover:bg-white/20 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm font-medium whitespace-nowrap ml-2 active:scale-95"
                 >
-                  重新搜索
+                  重新搜尋
                 </button>
               </div>
 

@@ -35,7 +35,7 @@ const faqs: FAQ[] = [
     category: 'process',
     question_zh: '我可以在投票站內使用手機嗎？',
     question_en: 'Can I use my phone in the polling station?',
-    answer_zh: '投票站內嚴禁拍照、攝錄或使用手機進行通訊。請將手機保持靜音並收起。',
+    answer_zh: '投票站內嚴禁拍照、錄影或使用手機進行通訊。請將手機調至靜音並收起。',
     answer_en: 'Photography, video recording, and phone communication are strictly prohibited in polling stations. Please keep your phone on silent and put away.'
   },
   {
