@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Loader2, AlertCircle, FileText, ExternalLink, User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { searchService, type IssueSearchResult } from '../services/searchService';
 import { policyService } from '../services/policyService';
 import { candidateService } from '../services/candidateService';
@@ -11,12 +12,14 @@ interface IssueSearchProps {
 }
 
 export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchProps) {
+  const { t } = useTranslation();
+
   const [queryText, setQueryText] = useState('');
   const [topicTags, setTopicTags] = useState<TopicTag[]>([]);
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [results, setResults] = useState<IssueSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
@@ -40,12 +43,12 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
 
   const handleSearch = async () => {
     if (!queryText.trim() && selectedTopics.length === 0) {
-      setError('請輸入關鍵詞或選擇至少一個議題標籤。');
+      setErrorKey('issueSearch.errorEmpty');
       return;
     }
 
     setLoading(true);
-    setError(null);
+    setErrorKey(null);
     setHasSearched(true);
 
     try {
@@ -56,7 +59,7 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
 
       setResults(data);
     } catch (err) {
-      setError('搜尋失敗，請稍後再試。');
+      setErrorKey('issueSearch.errorSearchFailed');
       console.error(err);
     } finally {
       setLoading(false);
@@ -67,7 +70,7 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
     setQueryText('');
     setSelectedTopics([]);
     setResults([]);
-    setError(null);
+    setErrorKey(null);
     setHasSearched(false);
   };
 
@@ -82,7 +85,7 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
           className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors mb-6"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span className="font-medium">返回</span>
+          <span className="font-medium">{t('common.back')}</span>
         </button>
 
         <div className="text-center mb-8">
@@ -90,10 +93,10 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
             <Search className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            按議題關鍵詞查找政綱
+            {t('issueSearch.title')}
           </h1>
           <p className="text-gray-600">
-            輸入你關心的議題，找出相關候選人的政綱內容。
+            {t('issueSearch.subtitle')}
           </p>
         </div>
 
@@ -101,7 +104,7 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                輸入你關心的議題或問題
+                {t('issueSearch.inputLabel')}
               </label>
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -110,7 +113,7 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
                   value={queryText}
                   onChange={(e) => setQueryText(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  placeholder="例如：公屋輪候時間、基層醫療、托兒服務"
+                  placeholder={t('issueSearch.inputPlaceholder')}
                   className="w-full pl-12 pr-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all text-lg"
                   disabled={loading}
                 />
@@ -119,7 +122,7 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
-                或選擇議題標籤（可多選）
+                {t('issueSearch.tagLabel')}
               </label>
               <div className="flex flex-wrap gap-2">
                 {topicTags.map((topic) => (
@@ -149,12 +152,12 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
                 {loading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>搜尋中...</span>
+                    <span>{t('issueSearch.searching')}</span>
                   </>
                 ) : (
                   <>
                     <Search className="w-5 h-5" />
-                    <span>搜尋政綱</span>
+                    <span>{t('issueSearch.searchButton')}</span>
                   </>
                 )}
               </button>
@@ -164,15 +167,17 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
                   onClick={handleReset}
                   className="px-6 py-4 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-colors"
                 >
-                  重置
+                  {t('issueSearch.reset')}
                 </button>
               )}
             </div>
 
-            {error && (
+            {errorKey && (
               <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                <p className="text-red-800 text-sm">{error}</p>
+                <p className="text-red-800 text-sm">
+                  {t(errorKey)}
+                </p>
               </div>
             )}
           </div>
@@ -189,18 +194,24 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
             {results.length === 0 ? (
               <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
                 <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 text-lg mb-2">未找到相關政綱內容</p>
-                <p className="text-gray-400 text-sm">請嘗試使用不同的關鍵詞或議題標籤。</p>
+                <p className="text-gray-500 text-lg mb-2">
+                  {t('issueSearch.noResultsTitle')}
+                </p>
+                <p className="text-gray-400 text-sm">
+                  {t('issueSearch.noResultsSubtitle')}
+                </p>
               </div>
             ) : (
               <>
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-2xl font-bold text-gray-900">
-                      搜尋結果
+                      {t('issueSearch.resultsTitle')}
                     </h2>
                     <span className="text-sm text-gray-600">
-                      共找到 {results.length} 位候選人
+                      {t('issueSearch.resultsCountPrefix')}{' '}
+                      {results.length}{' '}
+                      {t('issueSearch.resultsCountSuffix')}
                     </span>
                   </div>
 
@@ -208,7 +219,7 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
                     <div className="mb-8">
                       <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <span className="text-green-600">📍</span>
-                        你所屬選區
+                        {t('issueSearch.userConstituencyTitle')}
                       </h3>
                       <div className="space-y-4">
                         {userConstituencyResults.map((result) => (
@@ -226,7 +237,9 @@ export default function IssueSearch({ onBack, onSelectCandidate }: IssueSearchPr
                     <div>
                       <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <span>📋</span>
-                        {userConstituencyResults.length > 0 ? '其他選區' : '所有選區'}
+                        {userConstituencyResults.length > 0
+                          ? t('issueSearch.otherConstituenciesTitle')
+                          : t('issueSearch.allConstituenciesTitle')}
                       </h3>
                       <div className="space-y-4">
                         {otherResults.map((result) => (
@@ -255,6 +268,7 @@ interface ResultCardProps {
 }
 
 function ResultCard({ result, onSelectCandidate }: ResultCardProps) {
+  const { t } = useTranslation();
   const [loadingCandidate, setLoadingCandidate] = useState(false);
 
   const handleSelectCandidate = async () => {
@@ -264,11 +278,11 @@ function ResultCard({ result, onSelectCandidate }: ResultCardProps) {
       if (fullCandidate) {
         onSelectCandidate(fullCandidate);
       } else {
-        alert('無法載入候選人資料，請稍後再試');
+        alert(t('issueSearch.loadCandidateFailedAlert'));
       }
     } catch (err) {
-      console.error('載入候選人資料失敗:', err);
-      alert('載入候選人資料失敗，請稍後再試');
+      console.error(t('issueSearch.loadCandidateErrorConsole'), err);
+      alert(t('issueSearch.loadCandidateFailedAlert'));
     } finally {
       setLoadingCandidate(false);
     }
@@ -308,17 +322,19 @@ function ResultCard({ result, onSelectCandidate }: ResultCardProps) {
             {loadingCandidate ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>載入中</span>
+                <span>{t('common.loading')}</span>
               </>
             ) : (
-              <span>查看詳情</span>
+              <span>{t('issueSearch.viewDetails')}</span>
             )}
           </button>
         </div>
 
         {result.matched_topics.length > 0 && (
           <div className="mb-4">
-            <h5 className="text-xs font-medium text-gray-500 mb-2">匹配議題：</h5>
+            <h5 className="text-xs font-medium text-gray-500 mb-2">
+              {t('issueSearch.matchedTopicsTitle')}
+            </h5>
             <div className="flex flex-wrap gap-2">
               {result.matched_topics.map((topic) => (
                 <span
@@ -341,7 +357,10 @@ function ResultCard({ result, onSelectCandidate }: ResultCardProps) {
                 {snippet.excerpt}
               </p>
               <div className="flex items-center justify-between text-xs text-gray-500">
-                <span>最後更新：{snippet.last_updated}</span>
+                <span>
+                  {t('issueSearch.lastUpdated')}
+                  {snippet.last_updated}
+                </span>
                 {snippet.source_url && (
                   <a
                     href={snippet.source_url}
@@ -349,7 +368,7 @@ function ResultCard({ result, onSelectCandidate }: ResultCardProps) {
                     rel="noopener noreferrer"
                     className="flex items-center gap-1 text-green-600 hover:text-green-700 font-medium"
                   >
-                    <span>查看原文</span>
+                    <span>{t('issueSearch.viewSource')}</span>
                     <ExternalLink className="w-3 h-3" />
                   </a>
                 )}

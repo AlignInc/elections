@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, User, Mail, Globe, Share2, FileText, ExternalLink, Users } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { Candidate, TopicTag } from '../lib/supabase';
 import { policyService } from '../services/policyService';
 
@@ -9,6 +10,9 @@ interface CandidateDetailProps {
 }
 
 export default function CandidateDetail({ candidate, onBack }: CandidateDetailProps) {
+  const { t, i18n } = useTranslation();
+  const isZh = i18n.language.startsWith('zh');
+
   const [topicTags, setTopicTags] = useState<TopicTag[]>([]);
   const [loadingTopics, setLoadingTopics] = useState(true);
 
@@ -29,29 +33,40 @@ export default function CandidateDetail({ candidate, onBack }: CandidateDetailPr
   };
 
   const handleShare = async () => {
-    const shareText = `${candidate.name_zh} - ${candidate.constituency_zh}選區候選人
+    const affiliationText = candidate.party_affiliation || candidate.affiliation || t('candidateDetail.politicalLabel');
+
+    const shareTextZh = `${candidate.name_zh} - ${candidate.constituency_zh}選區候選人
 候選人編號：${candidate.candidate_number}
 政治背景：${candidate.party_affiliation || candidate.affiliation || '獨立候選人'}
 ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
 
+    const shareTextEn = `${candidate.name_en || candidate.name_zh} - Candidate for ${candidate.constituency_en || candidate.constituency_zh}
+Candidate number: ${candidate.candidate_number}
+Political affiliation: ${affiliationText}
+${candidate.occupation ? `Occupation: ${candidate.occupation}` : ''}`;
+
+    const shareText = isZh ? shareTextZh : shareTextEn;
+
     try {
       if (navigator.share && navigator.canShare) {
         await navigator.share({
-          title: `${candidate.name_zh} - 2025立法會候選人`,
+          title: isZh
+            ? `${candidate.name_zh} - 2025立法會候選人`
+            : `${candidate.name_en || candidate.name_zh} - 2025 Legislative Council Candidate`,
           text: shareText
         });
       } else {
         await navigator.clipboard.writeText(shareText);
-        alert('候選人資料已複製到剪貼簿！');
+        alert(t('candidateDetail.shareCopied'));
       }
     } catch (err: any) {
       if (err.name !== 'AbortError') {
         try {
           await navigator.clipboard.writeText(shareText);
-          alert('候選人資料已複製到剪貼簿！');
+          alert(t('candidateDetail.shareCopied'));
         } catch (clipboardErr) {
           console.error('分享失敗', clipboardErr);
-          alert('分享功能暫時無法使用，請稍後再試。');
+          alert(t('candidateDetail.shareFailed'));
         }
       }
     }
@@ -66,14 +81,14 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors group"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            <span className="font-medium">返回</span>
+            <span className="font-medium">{t('common.back')}</span>
           </button>
           <button
             onClick={handleShare}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
           >
             <Share2 className="w-4 h-4" />
-            <span className="font-medium">分享</span>
+            <span className="font-medium">{t('candidateDetail.shareButton')}</span>
           </button>
         </div>
       </div>
@@ -105,9 +120,11 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
                   <h3 className="text-sm font-semibold text-blue-900 mb-1 flex items-center gap-2">
                     <User className="w-4 h-4" />
-                    年齡 Age
+                    {t('candidateDetail.ageLabel')}
                   </h3>
-                  <p className="text-gray-900 font-medium">{candidate.age}歲</p>
+                  <p className="text-gray-900 font-medium">
+                    {isZh ? `${candidate.age}歲` : candidate.age}
+                  </p>
                 </div>
               )}
 
@@ -115,7 +132,7 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
                 <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
                   <h3 className="text-sm font-semibold text-green-900 mb-1 flex items-center gap-2">
                     <Users className="w-4 h-4" />
-                    職業 Occupation
+                    {t('candidateDetail.occupationLabel')}
                   </h3>
                   <p className="text-gray-900 font-medium">{candidate.occupation}</p>
                 </div>
@@ -124,10 +141,10 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
               {(candidate.party_affiliation || candidate.affiliation) && (
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 border border-purple-200 sm:col-span-2">
                   <h3 className="text-sm font-semibold text-purple-900 mb-1">
-                    政治背景 Political Affiliation
+                    {t('candidateDetail.politicalLabel')}
                   </h3>
                   <p className="text-gray-900 font-medium">
-                    {candidate.party_affiliation || candidate.affiliation || '獨立候選人'}
+                    {candidate.party_affiliation || candidate.affiliation || (isZh ? '獨立候選人' : 'Independent candidate')}
                   </p>
                 </div>
               )}
@@ -137,12 +154,14 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border-2 border-blue-200 shadow-md">
                 <h2 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
                   <FileText className="w-5 h-5 text-blue-600" />
-                  競選簡介 Electoral Message
+                  {t('candidateDetail.electoralMessageLabel')}
                 </h2>
 
                 {!loadingTopics && topicTags.length > 0 && (
                   <div className="mb-4">
-                    <h5 className="text-xs font-medium text-gray-500 mb-2">相關議題：</h5>
+                    <h5 className="text-xs font-medium text-gray-500 mb-2">
+                      {t('issueSearch.matchedTopicsTitle')}
+                    </h5>
                     <div className="flex flex-wrap gap-2">
                       {topicTags.map((topic) => (
                         <span
@@ -167,7 +186,9 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
 
             {(candidate.platform_pdf_url || candidate.source_gc_intro_page) && (
               <div className="border-t-2 border-gray-200 pt-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">官方資料連結</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-4">
+                  {t('candidateDetail.officialLinksTitle')}
+                </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {candidate.platform_pdf_url && (
                     <a
@@ -178,8 +199,12 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
                     >
                       <FileText className="w-6 h-6 text-red-600 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-900 text-sm">候選人簡介 PDF</p>
-                        <p className="text-xs text-gray-600">Candidate Profile</p>
+                        <p className="font-semibold text-gray-900 text-sm">
+                          {t('candidateDetail.officialProfilePdf')}
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          {t('candidateDetail.officialProfilePdfEn')}
+                        </p>
                       </div>
                       <ExternalLink className="w-4 h-4 text-red-600 group-hover:translate-x-1 transition-transform" />
                     </a>
@@ -194,8 +219,12 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
                     >
                       <Globe className="w-6 h-6 text-blue-600 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-900 text-sm">選區候選人介紹</p>
-                        <p className="text-xs text-gray-600">Constituency Page</p>
+                        <p className="font-semibold text-gray-900 text-sm">
+                          {t('candidateDetail.officialConstituencyPage')}
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          {t('candidateDetail.officialConstituencyPageEn')}
+                        </p>
                       </div>
                       <ExternalLink className="w-4 h-4 text-blue-600 group-hover:translate-x-1 transition-transform" />
                     </a>
@@ -206,7 +235,9 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
 
             {(candidate.email || candidate.website) && (
               <div className="border-t-2 border-gray-200 pt-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">聯絡方式</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-4">
+                  {t('candidateDetail.contactTitle')}
+                </h2>
                 <div className="space-y-3">
                   {candidate.email && (
                     <a
@@ -242,13 +273,13 @@ ${candidate.occupation ? `職業：${candidate.occupation}` : ''}`;
             </div>
             <div>
               <p className="text-sm font-bold text-blue-900 mb-1">
-                投票日期：2025 年 12 月 7 日（星期日）
+                {t('candidateDetail.voteDate')}
               </p>
               <p className="text-sm text-blue-800 mb-2">
-                投票時間：上午7:30至晚上10:30
+                {t('candidateDetail.voteTime')}
               </p>
               <p className="text-xs text-blue-700">
-                以上資料由候選人提供，並整理自香港選舉管理委員會官方網站。
+                {t('candidateDetail.footerNote')}
               </p>
             </div>
           </div>

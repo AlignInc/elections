@@ -1,4 +1,5 @@
 import { ArrowLeft, Calendar, Clock, MapPin, ExternalLink } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import VotingChecklist from '../components/VotingChecklist';
 import VotingSteps from '../components/VotingSteps';
 import DocumentRequirements from '../components/DocumentRequirements';
@@ -9,6 +10,9 @@ interface VotingDayGuideProps {
 }
 
 export default function VotingDayGuide({ onBack }: VotingDayGuideProps) {
+  const { t, i18n } = useTranslation();
+  const isZh = i18n.language.startsWith('zh');
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-orange-50 to-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
@@ -17,7 +21,7 @@ export default function VotingDayGuide({ onBack }: VotingDayGuideProps) {
           className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors group"
         >
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          <span className="font-medium">返回主頁</span>
+          <span className="font-medium">{t('common.backHome')}</span>
         </button>
 
         <div className="text-center mb-8">
@@ -25,13 +29,13 @@ export default function VotingDayGuide({ onBack }: VotingDayGuideProps) {
             <span className="text-3xl sm:text-4xl">📋</span>
           </div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-            投票日指南
+            {t('votingDay.title')}
           </h1>
           <p className="text-base sm:text-lg text-gray-600 mb-2">
-            Voting Day Guide
+            {t('votingDay.subtitle')}
           </p>
           <p className="text-sm text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            完整的投票流程、所需文件及常見問題解答
+            {t('votingDay.description')}
           </p>
         </div>
 
@@ -42,11 +46,14 @@ export default function VotingDayGuide({ onBack }: VotingDayGuideProps) {
                 <Calendar className="w-5 h-5 text-blue-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">投票日期</p>
-                <p className="font-bold text-gray-900">2025年12月7日</p>
+                <p className="text-xs text-gray-500">
+                  {t('votingDay.dateLabel')}
+                </p>
+                <p className="font-bold text-gray-900">
+                  {isZh ? t('votingDay.dateValueZh') : t('votingDay.dateValueEn')}
+                </p>
               </div>
             </div>
-            <p className="text-xs text-gray-600">Dec 7, 2025 (Sunday)</p>
           </div>
 
           <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5">
@@ -55,11 +62,14 @@ export default function VotingDayGuide({ onBack }: VotingDayGuideProps) {
                 <Clock className="w-5 h-5 text-green-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">投票時間</p>
-                <p className="font-bold text-gray-900">07:30 - 23:30</p>
+                <p className="text-xs text-gray-500">
+                  {t('votingDay.timeLabel')}
+                </p>
+                <p className="font-bold text-gray-900">
+                  {t('votingDay.timeValue')}
+                </p>
               </div>
             </div>
-            <p className="text-xs text-gray-600">16-hour extended polling hours</p>
           </div>
 
           <a
@@ -74,13 +84,16 @@ export default function VotingDayGuide({ onBack }: VotingDayGuideProps) {
                   <MapPin className="w-5 h-5 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">投票地點</p>
-                  <p className="font-bold text-gray-900">指定投票站</p>
+                  <p className="text-xs text-gray-500">
+                    {t('votingDay.placeLabel')}
+                  </p>
+                  <p className="font-bold text-gray-900">
+                    {isZh ? t('votingDay.placeValueZh') : t('votingDay.placeValueEn')}
+                  </p>
                 </div>
               </div>
               <ExternalLink className="w-4 h-4 text-purple-600 group-hover:translate-x-1 transition-transform" />
             </div>
-            <p className="text-xs text-gray-600">Assigned Polling Station</p>
           </a>
         </div>
 
@@ -94,17 +107,19 @@ export default function VotingDayGuide({ onBack }: VotingDayGuideProps) {
           <VotingFAQ />
 
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-lg p-6 text-white">
-            <h3 className="text-xl font-bold mb-3">投票須知</h3>
+            <h3 className="text-xl font-bold mb-3">
+              {t('votingDay.noticeTitle')}
+            </h3>
             <div className="space-y-2 text-sm leading-relaxed">
-              <p>• 每名選民只可投票一次，並只可選擇一名候選人</p>
-              <p>• 投票站內嚴禁拍照、錄影或使用通訊設備</p>
-              <p>• 請保持投票的私密性，不要向他人透露你的投票選擇</p>
-              <p>• 投票站內禁止進行任何拉票或宣傳活動</p>
-              <p>• 如有疑問或遇到困難，請向投票站工作人員尋求協助</p>
+              <p>• {t('votingDay.noticeItems.item1')}</p>
+              <p>• {t('votingDay.noticeItems.item2')}</p>
+              <p>• {t('votingDay.noticeItems.item3')}</p>
+              <p>• {t('votingDay.noticeItems.item4')}</p>
+              <p>• {t('votingDay.noticeItems.item5')}</p>
             </div>
             <div className="mt-4 pt-4 border-t border-blue-500">
               <p className="text-xs text-blue-100">
-                Important reminders: Each voter can vote only once for one candidate. Photography and campaigning are prohibited inside polling stations. Please keep your vote private.
+                {t('votingDay.noticeFooter')}
               </p>
             </div>
           </div>
@@ -117,13 +132,10 @@ export default function VotingDayGuide({ onBack }: VotingDayGuideProps) {
           >
             <div className="flex items-center justify-center gap-2 mb-2">
               <p className="text-sm text-gray-600">
-                如需更多資訊，請瀏覽選舉管理委員會官方網站。
+                {isZh ? t('votingDay.moreInfoZh') : t('votingDay.moreInfoEn')}
               </p>
               <ExternalLink className="w-4 h-4 text-gray-600 group-hover:translate-x-1 transition-transform" />
             </div>
-            <p className="text-xs text-gray-500">
-              For more information, visit the Electoral Affairs Commission official website
-            </p>
           </a>
         </div>
       </div>

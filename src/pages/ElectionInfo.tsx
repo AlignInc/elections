@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ArrowLeft, ChevronDown, ChevronUp, Calendar, Users, MapPin, FileText, CheckCircle, AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ElectionInfoProps {
   onBack: () => void;
@@ -13,6 +14,7 @@ interface Section {
 }
 
 export default function ElectionInfo({ onBack }: ElectionInfoProps) {
+  const { t } = useTranslation();
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['intro']));
 
   const toggleSection = (sectionId: string) => {
@@ -397,7 +399,7 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
           className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors mb-6"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span className="font-medium">返回</span>
+          <span className="font-medium">{t('common.back')}</span>
         </button>
 
         <div className="text-center mb-8">
@@ -405,10 +407,10 @@ export default function ElectionInfo({ onBack }: ElectionInfoProps) {
             <FileText className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            2025年立法會選舉資訊
+            {t('electionInfo.pageTitle')}
           </h1>
           <p className="text-gray-600">
-            Legislative Council Election 2025 Information
+            {t('electionInfo.pageSubtitle')}
           </p>
         </div>
 

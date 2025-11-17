@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { CheckCircle2, Circle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ChecklistItem {
   id: string;
@@ -42,6 +43,9 @@ const defaultChecklistItems: Omit<ChecklistItem, 'completed'>[] = [
 ];
 
 export default function VotingChecklist() {
+  const { t, i18n } = useTranslation();
+  const isZh = i18n.language.startsWith('zh');
+
   const [items, setItems] = useState<ChecklistItem[]>(() => {
     const saved = localStorage.getItem('votingChecklist');
     if (saved) {
@@ -73,8 +77,12 @@ export default function VotingChecklist() {
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
       <div className="bg-gradient-to-r from-green-500 to-green-600 p-6">
-        <h3 className="text-xl font-bold text-white mb-2">投票前檢查清單</h3>
-        <p className="text-green-50 text-sm">Pre-Voting Checklist</p>
+        <h3 className="text-xl font-bold text-white mb-2">
+          {t('votingChecklist.title')}
+        </h3>
+        <p className="text-green-50 text-sm">
+          {t('votingChecklist.subtitle')}
+        </p>
 
         <div className="mt-4">
           <div className="flex justify-between items-center text-white text-sm mb-2">
@@ -110,15 +118,12 @@ export default function VotingChecklist() {
                 )}
               </div>
               <div className="flex-1">
-                <p className={`font-medium ${
-                  item.completed ? 'text-green-900 line-through' : 'text-gray-900'
-                }`}>
-                  {item.label_zh}
-                </p>
-                <p className={`text-sm mt-0.5 ${
-                  item.completed ? 'text-green-700 line-through' : 'text-gray-600'
-                }`}>
-                  {item.label_en}
+                <p
+                  className={`font-medium ${
+                    item.completed ? 'text-green-900 line-through' : 'text-gray-900'
+                  }`}
+                >
+                  {isZh ? item.label_zh : item.label_en}
                 </p>
               </div>
             </button>
@@ -127,8 +132,12 @@ export default function VotingChecklist() {
 
         {completedCount === totalCount && (
           <div className="mt-6 p-4 bg-green-100 border-2 border-green-300 rounded-lg text-center">
-            <p className="text-green-900 font-bold mb-1">🎉 準備就緒！</p>
-            <p className="text-green-700 text-sm">You're all set for voting day!</p>
+            <p className="text-green-900 font-bold mb-1">
+              {t('votingChecklist.doneTitle')}
+            </p>
+            <p className="text-green-700 text-sm">
+              {t('votingChecklist.doneSubtitle')}
+            </p>
           </div>
         )}
       </div>

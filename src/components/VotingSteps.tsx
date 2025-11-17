@@ -1,4 +1,5 @@
 import { MapPin, UserCheck, FileText, CheckSquare, Send, CheckCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface VotingStep {
   icon: any;
@@ -68,10 +69,17 @@ const votingSteps: VotingStep[] = [
 ];
 
 export default function VotingSteps() {
+  const { t, i18n } = useTranslation();
+  const isZh = i18n.language.startsWith('zh');
+
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-      <h3 className="text-2xl font-bold text-gray-900 mb-2">投票流程</h3>
-      <p className="text-gray-600 mb-8">Step-by-Step Voting Process</p>
+      <h3 className="text-2xl font-bold text-gray-900 mb-2">
+        {t('votingSteps.title')}
+      </h3>
+      <p className="text-gray-600 mb-8">
+        {t('votingSteps.subtitle')}
+      </p>
 
       <div className="space-y-6">
         {votingSteps.map((step, index) => {
@@ -93,17 +101,23 @@ export default function VotingSteps() {
                 <div className="flex-1 pb-8">
                   <div className="flex items-baseline gap-3 mb-2">
                     <span className="text-blue-600 font-bold text-sm">步驟 {index + 1}</span>
-                    <h4 className="text-lg font-bold text-gray-900">{step.title_zh}</h4>
+                    <h4 className="text-lg font-bold text-gray-900">
+                      {isZh ? step.title_zh : step.title_en}
+                    </h4>
                   </div>
-                  <p className="text-sm text-gray-500 mb-3">{step.title_en}</p>
+                  <p className="text-sm text-gray-500 mb-3">
+                    {isZh ? '' : step.title_en}
+                  </p>
 
-                  <p className="text-gray-700 mb-2 leading-relaxed">{step.description_zh}</p>
-                  <p className="text-sm text-gray-600 leading-relaxed">{step.description_en}</p>
+                  <p className="text-gray-700 mb-2 leading-relaxed">
+                    {isZh ? step.description_zh : step.description_en}
+                  </p>
 
                   {step.tip_zh && step.tip_en && (
                     <div className="mt-3 bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r">
-                      <p className="text-sm text-blue-900 font-medium">💡 {step.tip_zh}</p>
-                      <p className="text-xs text-blue-700 mt-1">{step.tip_en}</p>
+                      <p className="text-sm text-blue-900 font-medium">
+                        💡 {isZh ? step.tip_zh : step.tip_en}
+                      </p>
                     </div>
                   )}
                 </div>

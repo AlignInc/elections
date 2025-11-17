@@ -1,4 +1,5 @@
 import { supabase, type TopicTag } from '../lib/supabase';
+import i18n from '../i18n';
 
 export interface IssueSearchRequest {
   queryText: string;
@@ -185,6 +186,6 @@ export const searchService = {
   },
 
   getDisclaimer(): string {
-    return '結果僅顯示政綱中與你輸入關鍵詞相關的內容，不構成任何形式的建議或評價。';
+    return i18n.t('issueSearch.disclaimer');
   }
 };

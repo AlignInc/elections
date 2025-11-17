@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface FAQ {
   question_zh: string;
@@ -69,6 +70,8 @@ const faqs: FAQ[] = [
 ];
 
 export default function VotingFAQ() {
+  const { t, i18n } = useTranslation();
+  const isZh = i18n.language.startsWith('zh');
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFAQ = (index: number) => {
@@ -82,14 +85,20 @@ export default function VotingFAQ() {
           <HelpCircle className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h3 className="text-2xl font-bold text-gray-900">常見問題</h3>
-          <p className="text-gray-600 text-sm">Frequently Asked Questions</p>
+          <h3 className="text-2xl font-bold text-gray-900">
+            {t('votingFAQ.title')}
+          </h3>
+          <p className="text-gray-600 text-sm">
+            {t('votingFAQ.subtitle')}
+          </p>
         </div>
       </div>
 
       <div className="space-y-3">
         {faqs.map((faq, index) => {
           const isOpen = openIndex === index;
+          const question = isZh ? faq.question_zh : faq.question_en;
+          const answer = isZh ? faq.answer_zh : faq.answer_en;
 
           return (
             <div
@@ -101,8 +110,7 @@ export default function VotingFAQ() {
                 className="w-full flex items-start justify-between gap-4 p-4 text-left bg-gray-50 hover:bg-purple-50 transition-colors"
               >
                 <div className="flex-1">
-                  <p className="font-bold text-gray-900 mb-1">{faq.question_zh}</p>
-                  <p className="text-sm text-gray-600">{faq.question_en}</p>
+                  <p className="font-bold text-gray-900 mb-1">{question}</p>
                 </div>
                 <div className="flex-shrink-0">
                   {isOpen ? (
@@ -115,8 +123,9 @@ export default function VotingFAQ() {
 
               {isOpen && (
                 <div className="p-4 bg-white border-t-2 border-gray-100">
-                  <p className="text-gray-800 leading-relaxed mb-2">{faq.answer_zh}</p>
-                  <p className="text-sm text-gray-600 leading-relaxed">{faq.answer_en}</p>
+                  <p className="text-gray-800 leading-relaxed mb-2">
+                    {answer}
+                  </p>
                 </div>
               )}
             </div>
@@ -125,12 +134,13 @@ export default function VotingFAQ() {
       </div>
 
       <div className="mt-6 p-4 bg-purple-50 border-2 border-purple-200 rounded-lg">
-        <p className="font-bold text-purple-900 mb-2">仍有疑問？</p>
-        <p className="text-sm text-purple-800 mb-1">
-          如有其他問題，請聯絡選舉事務處或瀏覽選舉管理委員會網站。
+        <p className="font-bold text-purple-900 mb-2">
+          {t('votingFAQ.stillHaveQuestionsTitle')}
         </p>
-        <p className="text-xs text-purple-700">
-          Still have questions? Contact the Electoral Affairs Commission or visit their website.
+        <p className="text-sm text-purple-800 mb-1">
+          {isZh
+            ? t('votingFAQ.stillHaveQuestionsZh')
+            : t('votingFAQ.stillHaveQuestionsEn')}
         </p>
       </div>
     </div>
