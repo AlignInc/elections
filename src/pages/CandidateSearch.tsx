@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, MapPin, Building2, Navigation, Search, Loader2, AlertCircle, ChevronRight, User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { constituencyService } from '../services/constituencyService';
 import { candidateService } from '../services/candidateService';
 import type { Constituency, Candidate } from '../lib/supabase';
@@ -13,11 +14,13 @@ interface CandidateSearchProps {
 type SearchMode = 'select' | 'location' | 'browse' | 'name';
 
 export default function CandidateSearch({ onBack, onSelectCandidate }: CandidateSearchProps) {
+  const { t } = useTranslation();
+
   const [searchMode, setSearchMode] = useState<SearchMode>('select');
   const [address, setAddress] = useState('');
   const [candidateName, setCandidateName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
   const [constituency, setConstituency] = useState<Constituency | null>(null);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
 
@@ -33,13 +36,13 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
 
   const loadConstituencies = async () => {
     setLoading(true);
-    setError(null);
+    setErrorKey(null);
 
     try {
       const data = await constituencyService.getConstituenciesByType(selectedType);
       setConstituencies(data);
     } catch (err) {
-      setError('載入選區資料失敗');
+      setErrorKey('candidateSearch.errorLoadConstituencies');
       console.error(err);
     } finally {
       setLoading(false);
@@ -48,11 +51,11 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
 
   const handleUseGPS = async () => {
     setLoading(true);
-    setError(null);
+    setErrorKey(null);
     setSearchMode('location');
 
     if (!navigator.geolocation) {
-      setError('你的瀏覽器不支援定位功能');
+      setErrorKey('candidateSearch.browserNoGeolocation');
       setLoading(false);
       return;
     }
@@ -67,17 +70,17 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
             setConstituency(result);
             await loadCandidates(result.id);
           } else {
-            setError('無法根據你的位置找到對應選區，請嘗試手動輸入地址或選擇選區');
+            setErrorKey('candidateSearch.errorNoConstituencyByLocation');
           }
         } catch (err) {
-          setError('定位失敗，請嘗試手動輸入地址或選擇選區');
+          setErrorKey('candidateSearch.errorLocationFailed');
           console.error(err);
         } finally {
           setLoading(false);
         }
       },
       (err) => {
-        setError('無法獲取你的位置，請嘗試手動輸入地址或選擇選區');
+        setErrorKey('candidateSearch.errorLocationDenied');
         setLoading(false);
         console.error(err);
       }
@@ -86,12 +89,12 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
 
   const handleSearchAddress = async () => {
     if (!address.trim()) {
-      setError('請輸入地址');
+      setErrorKey('candidateSearch.errorEmptyAddress');
       return;
     }
 
     setLoading(true);
-    setError(null);
+    setErrorKey(null);
     setSearchMode('location');
 
     try {
@@ -101,10 +104,10 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
         setConstituency(result);
         await loadCandidates(result.id);
       } else {
-        setError('找不到對應選區，請嘗試輸入更具體的地址（例如：銅鑼灣、中環、深水埗等）。');
+        setErrorKey('candidateSearch.errorNoConstituencyByAddress');
       }
     } catch (err) {
-      setError('搜尋失敗，請稍後再試。');
+      setErrorKey('candidateSearch.errorSearchFailed');
       console.error(err);
     } finally {
       setLoading(false);
@@ -114,13 +117,13 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
   const handleSelectConstituency = async (constituency: Constituency) => {
     setSelectedConstituency(constituency);
     setLoading(true);
-    setError(null);
+    setErrorKey(null);
 
     try {
       const data = await constituencyService.getCandidatesByConstituency(constituency.id);
       setCandidates(data);
     } catch (err) {
-      setError('載入候選人資料失敗');
+      setErrorKey('candidateSearch.errorLoadCandidates');
       console.error(err);
     } finally {
       setLoading(false);
@@ -132,30 +135,30 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
       const data = await constituencyService.getCandidatesByConstituency(constituencyId);
       setCandidates(data);
     } catch (err) {
-      setError('載入候選人資料失敗');
+      setErrorKey('candidateSearch.errorLoadCandidates');
       console.error(err);
     }
   };
 
   const handleSearchByName = async () => {
     if (!candidateName.trim()) {
-      setError('請輸入候選人姓名');
+      setErrorKey('candidateSearch.errorEmptyName');
       return;
     }
 
     setLoading(true);
-    setError(null);
+    setErrorKey(null);
 
     try {
       const results = await candidateService.searchCandidates(candidateName);
 
       if (results.length === 0) {
-        setError('找不到相關候選人，請嘗試使用其他關鍵詞。');
+        setErrorKey('candidateSearch.errorNoCandidates');
       }
 
       setCandidates(results);
     } catch (err) {
-      setError('搜尋失敗，請稍後再試。');
+      setErrorKey('candidateSearch.errorSearchFailed');
       console.error(err);
     } finally {
       setLoading(false);
@@ -169,7 +172,7 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
     setConstituency(null);
     setCandidates([]);
     setSelectedConstituency(null);
-    setError(null);
+    setErrorKey(null);
   };
 
   const groupedConstituencies = constituencies.reduce((acc, constituency) => {
@@ -189,7 +192,9 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
           className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors mb-6 group"
         >
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          <span className="font-medium">{searchMode === 'select' ? '返回主頁' : '返回'}</span>
+          <span className="font-medium">
+            {searchMode === 'select' ? t('common.backHome') : t('common.back')}
+          </span>
         </button>
 
         <div className="text-center mb-8">
@@ -197,10 +202,10 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
             <Search className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            查找候選人
+            {t('candidateSearch.title')}
           </h1>
           <p className="text-gray-600">
-            使用定位、輸入地址或直接選擇選區
+            {t('candidateSearch.subtitle')}
           </p>
         </div>
 
@@ -216,10 +221,10 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
-                    使用當前位置
+                    {t('candidateSearch.useCurrentLocation')}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    自動定位並查找你所屬選區的候選人
+                    {t('candidateSearch.useCurrentLocationDesc')}
                   </p>
                 </div>
                 <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
@@ -236,10 +241,10 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-green-600 transition-colors">
-                    輸入地址查找
+                    {t('candidateSearch.searchByAddress')}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    輸入你的地址或所在區域名稱
+                    {t('candidateSearch.searchByAddressDesc')}
                   </p>
                 </div>
                 <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-green-600 group-hover:translate-x-1 transition-all" />
@@ -256,10 +261,10 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-purple-600 transition-colors">
-                    按選區瀏覽
+                    {t('candidateSearch.browseByConstituency')}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    選擇具體選區，瀏覽該選區所有候選人
+                    {t('candidateSearch.browseByConstituencyDesc')}
                   </p>
                 </div>
                 <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />
@@ -276,10 +281,10 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">
-                    輸入姓名查找
+                    {t('candidateSearch.searchByName')}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    直接輸入候選人中文或英文姓名搜尋
+                    {t('candidateSearch.searchByNameDesc')}
                   </p>
                 </div>
                 <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-orange-600 group-hover:translate-x-1 transition-all" />
@@ -293,7 +298,7 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <User className="w-5 h-5 text-orange-600" />
-                輸入候選人姓名
+                {t('candidateSearch.inputNameLabel')}
               </h3>
               <div className="flex gap-3">
                 <input
@@ -301,7 +306,7 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                   value={candidateName}
                   onChange={(e) => setCandidateName(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearchByName()}
-                  placeholder="例如：李慧琼、吳秋北、Starry Lee"
+                  placeholder={t('candidateSearch.inputNamePlaceholder')}
                   className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:outline-none transition-colors"
                 />
                 <button
@@ -309,17 +314,19 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                   disabled={loading}
                   className="px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-xl font-medium hover:from-orange-700 hover:to-orange-800 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : '搜尋'}
+                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : t('candidateSearch.searchButton')}
                 </button>
               </div>
             </div>
 
-            {error && (
+            {errorKey && (
               <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-6 flex items-start gap-3">
                 <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-red-900 mb-1">搜尋失敗</h3>
-                  <p className="text-red-700">{error}</p>
+                  <h3 className="font-semibold text-red-900 mb-1">
+                    {t('candidateSearch.errorTitle')}
+                  </h3>
+                  <p className="text-red-700">{t(errorKey)}</p>
                 </div>
               </div>
             )}
@@ -327,7 +334,7 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
             {!loading && candidates.length > 0 && (
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  搜尋結果（共 {candidates.length} 位）
+                  {t('candidateSearch.resultsTitle', { count: candidates.length })}
                 </h3>
                 <CandidateList
                   candidates={candidates}
@@ -343,7 +350,7 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-blue-600" />
-                輸入地址
+                {t('candidateSearch.inputAddressLabel')}
               </h3>
               <div className="flex gap-3">
                 <input
@@ -351,7 +358,7 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearchAddress()}
-                  placeholder="例如：銅鑼灣、中環、深水埗"
+                  placeholder={t('candidateSearch.inputAddressPlaceholder')}
                   className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors"
                 />
                 <button
@@ -359,17 +366,19 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                   disabled={loading}
                   className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-medium hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : '搜尋'}
+                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : t('candidateSearch.searchButton')}
                 </button>
               </div>
             </div>
 
-            {error && (
+            {errorKey && (
               <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-6 flex items-start gap-3">
                 <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-red-900 mb-1">搜尋失敗</h3>
-                  <p className="text-red-700">{error}</p>
+                  <h3 className="font-semibold text-red-900 mb-1">
+                    {t('candidateSearch.errorTitle')}
+                  </h3>
+                  <p className="text-red-700">{t(errorKey)}</p>
                 </div>
               </div>
             )}
@@ -379,19 +388,25 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
         {searchMode === 'browse' && !selectedConstituency && (
           <div className="space-y-6">
             <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">選擇選區類型</h3>
+              <h3 className="font-semibold text-gray-900 mb-4">
+                {t('constituencyBrowse.selectType')}
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {['地方選區', '功能界別', '選舉委員會界別'].map((type) => (
+                {[
+                  { value: '地方選區', labelKey: 'constituencyBrowse.types.gc' },
+                  { value: '功能界別', labelKey: 'constituencyBrowse.types.fc' },
+                  { value: '選舉委員會界別', labelKey: 'constituencyBrowse.types.ecc' }
+                ].map(({ value, labelKey }) => (
                   <button
-                    key={type}
-                    onClick={() => setSelectedType(type)}
+                    key={value}
+                    onClick={() => setSelectedType(value)}
                     className={`px-4 py-3 rounded-xl font-medium transition-all ${
-                      selectedType === type
+                      selectedType === value
                         ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    {type}
+                    {t(labelKey)}
                   </button>
                 ))}
               </div>
@@ -400,19 +415,25 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
             {loading ? (
               <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
                 <Loader2 className="w-12 h-12 text-purple-600 animate-spin mx-auto mb-4" />
-                <p className="text-gray-600">載入選區資料中...</p>
+                <p className="text-gray-600">{t('common.loadingConstituencies')}</p>
               </div>
-            ) : error ? (
+            ) : errorKey ? (
               <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-6 flex items-start gap-3">
                 <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-red-900 mb-1">載入失敗</h3>
-                  <p className="text-red-700">{error}</p>
+                  <h3 className="font-semibold text-red-900 mb-1">
+                    {t('common.loadFailedTitle')}
+                  </h3>
+                  <p className="text-red-700">
+                    {errorKey ? t(errorKey) : ''}
+                  </p>
                 </div>
               </div>
             ) : constituencies.length === 0 ? (
               <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
-                <p className="text-gray-500">此類型暫無選區資料</p>
+                <p className="text-gray-500">
+                  {t('common.noConstituencyOfType')}
+                </p>
               </div>
             ) : (
               <div className="space-y-6">
@@ -484,13 +505,17 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
 
             <div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">
-                候選人列表（共 {candidates.length} 位）
+                {t('common.listCandidatesPrefix')}{' '}
+                {candidates.length}{' '}
+                {t('common.candidatesCountSuffix')}
               </h3>
 
               {loading ? (
                 <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
                   <Loader2 className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
-                  <p className="text-gray-600">載入候選人資料中...</p>
+                  <p className="text-gray-600">
+                    {t('common.loadingCandidates')}
+                  </p>
                 </div>
               ) : candidates.length > 0 ? (
                 <CandidateList
@@ -499,7 +524,9 @@ export default function CandidateSearch({ onBack, onSelectCandidate }: Candidate
                 />
               ) : (
                 <div className="bg-white rounded-xl border-2 border-gray-200 p-12 text-center">
-                  <p className="text-gray-500">本選區暫無候選人資料</p>
+                  <p className="text-gray-500">
+                    {t('common.noCandidatesInConstituency')}
+                  </p>
                 </div>
               )}
             </div>

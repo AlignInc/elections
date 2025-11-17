@@ -1,41 +1,46 @@
 import { Search as SearchIcon, FileQuestion, ClipboardCheck, Info } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import ElectionCountdown from '../components/ElectionCountdown';
+import LanguageToggle from '../components/LanguageToggle';
 
 interface ElectionHomeProps {
   onNavigate: (page: 'candidate-search' | 'issue' | 'voting-guide' | 'election-info') => void;
 }
 
 export default function ElectionHome({ onNavigate }: ElectionHomeProps) {
+  const { t, i18n } = useTranslation();
+  const isZh = i18n.language.startsWith('zh');
+
   const features = [
     {
       id: 'candidate-search' as const,
       icon: SearchIcon,
-      title: '查找候選人',
-      description: '使用定位、輸入地址或直接選擇選區查找候選人',
+      title: t('home.featureCandidateTitle'),
+      description: t('home.featureCandidateDesc'),
       color: 'from-blue-500 to-blue-600',
       hoverColor: 'hover:from-blue-600 hover:to-blue-700'
     },
     {
       id: 'issue' as const,
       icon: FileQuestion,
-      title: '查找政綱',
-      description: '輸入關心的議題，找出相關候選人的政綱內容',
+      title: t('home.featureIssueTitle'),
+      description: t('home.featureIssueDesc'),
       color: 'from-green-500 to-green-600',
       hoverColor: 'hover:from-green-600 hover:to-green-700'
     },
     {
       id: 'voting-guide' as const,
       icon: ClipboardCheck,
-      title: '投票日指南',
-      description: '查看完整投票流程、所需文件及常見問題解答',
+      title: t('home.featureGuideTitle'),
+      description: t('home.featureGuideDesc'),
       color: 'from-orange-500 to-orange-600',
       hoverColor: 'hover:from-orange-600 hover:to-orange-700'
     },
     {
       id: 'election-info' as const,
       icon: Info,
-      title: '選舉資訊',
-      description: '瞭解立法會選舉制度、議席分配、投票資格等官方資訊',
+      title: t('home.featureInfoTitle'),
+      description: t('home.featureInfoDesc'),
       color: 'from-violet-500 to-violet-600',
       hoverColor: 'hover:from-violet-600 hover:to-violet-700'
     }
@@ -44,18 +49,18 @@ export default function ElectionHome({ onNavigate }: ElectionHomeProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-4 sm:py-8">
+        <div className="flex justify-end mb-4">
+          <LanguageToggle />
+        </div>
         <div className="text-center mb-4 sm:mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-orange-400 to-red-500 rounded-3xl mb-2 sm:mb-4 shadow-lg">
             <span className="text-4xl sm:text-6xl">🗳️</span>
           </div>
           <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1 sm:mb-3">
-            投入選舉，共創未來
+            {isZh ? t('home.sloganTitle') : t('home.sloganSubtitle')}
           </h1>
-          <h2 className="text-base sm:text-xl md:text-2xl font-semibold text-blue-600 mb-2 sm:mb-4">
-            Join the Election, Together We Create the Future
-          </h2>
           <p className="text-sm sm:text-lg text-gray-600 max-w-3xl mx-auto">
-            匯集2025年立法會換屆選舉資訊，助你輕鬆查找候選人、比較政綱立場、了解投票流程，讓每一票更有意義。
+            {t('home.description')}
           </p>
         </div>
 
@@ -102,20 +107,20 @@ export default function ElectionHome({ onNavigate }: ElectionHomeProps) {
         <div className="hidden sm:block bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
           <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
             <span className="text-blue-600">📋</span>
-            關於本系統
+            {t('home.aboutTitle')}
           </h3>
           <div className="space-y-2 text-sm text-gray-600 leading-relaxed">
             <p>
-              • 本系統整合2025年立法會換屆選舉地方選區全部 51 位直選候選人的基本資料及政綱
+              • {t('home.aboutLine1')}
             </p>
             <p>
-              • 資料來源：香港選舉管理委員會官方網站
+              • {t('home.aboutLine2')}
             </p>
             <p>
-              • 投票日期：2025年12月7日（星期日）
+              • {t('home.aboutLine3')}
             </p>
             <p className="pt-2 text-xs text-gray-500">
-              如有疑問，請以官方公布的資料為準。
+              {t('home.aboutFooter')}
             </p>
           </div>
         </div>

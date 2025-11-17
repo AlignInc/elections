@@ -1,4 +1,67 @@
-# 文案潤色建議
+# 語言結構調整方案（中英文完全分開）
+
+需求摘要：
+
+- 介面預設顯示繁體中文（zh-TW），英文（en）作為選項。
+- 右上角提供語言切換器，可在「繁體中文 / English」之間切換。
+- 切換語言後，介面文案只顯示該語言版本，不再中英夾雜（例如同一行同時出現中英）。
+- 候選人姓名、選區名稱等資料欄位可保留中英並列（如 `name_zh`、`name_en`），但 UI 標題／說明文字要依語言切換。
+
+技術實作方向（規劃，尚未修改程式碼）：
+
+1. 全域語言狀態  
+   - 在 `src/App.tsx` 新增 `language` 狀態：`'zh' | 'en'`，預設 `'zh'`。  
+   - 建立 `LanguageContext` 或以 props 方式將 `language` 傳入各頁／元件。  
+   - 提供 `setLanguage` 讓語言切換器可以更新狀態。
+
+2. 右上角語言切換器  
+   - 新增元件（暫名）：`src/components/LanguageToggle.tsx`。  
+   - 樣式：固定在畫面右上角，內容為兩個按鈕或 Segmented Control：`繁體中文` / `English`。  
+   - 行為：  
+     - 點擊「繁體中文」→ `language = 'zh'`  
+     - 點擊「English」→ `language = 'en'`  
+     - 目前選中的語言高亮顯示。
+   - 在 `App` 最外層 wrapper 中渲染此元件，確保所有頁面（包括候選人詳情）右上角都能看到切換器。
+
+3. 文案結構調整原則  
+   - 將目前「中英同時出現」的地方拆成依 `language` 切換的兩套字串：  
+     - 例如：  
+       - 標題：  
+         - `language === 'zh' ? '投票日指南' : 'Voting Day Guide'`  
+       - 說明：  
+         - `language === 'zh' ? '完整的投票流程、所需文件及常見問題解答' : 'A complete guide to voting procedures, required documents, and FAQs.'`  
+   - 不再在同一段落一次顯示中英（例如一行中文下一行英文）——改為同一位置依語言切換顯示其中一種。
+   - 已存在的英文副標題／說明文字會被收斂為 `language === 'en'` 的版本，不會被刪除，只是不在中文模式下顯示。
+
+4. 需支援語言切換的主要檔案（計畫覆蓋範圍）  
+   - 頁面：  
+     - `src/pages/ElectionHome.tsx`  
+     - `src/pages/CandidateSearch.tsx`  
+     - `src/pages/IssueSearch.tsx`  
+     - `src/pages/LocationSearch.tsx`  
+     - `src/pages/ConstituencyBrowse.tsx`  
+     - `src/pages/VotingDayGuide.tsx`  
+     - `src/pages/ElectionInfo.tsx`  
+   - 元件：  
+     - `src/components/CandidateDetail.tsx`（標題／區塊標籤等）  
+     - `src/components/CandidateList.tsx`（小標說明文字）  
+     - `src/components/VotingChecklist.tsx`（已內建中英文欄位，可改用 `language` 顯示其中一種）  
+     - `src/components/VotingFAQ.tsx`（問答目前中英成對，改為依 `language` 顯示一種）  
+     - `src/components/VotingSteps.tsx`（`title_zh`/`title_en`、`description_zh`/`description_en` 依語言切換）  
+     - `src/components/SearchBar.tsx`（placeholder 可有中英文版本）  
+   - 特別說明：  
+     - `DocumentRequirements.tsx` 以官方原文為主，暫時只在繁體模式顯示；若未來需要英文版，可新增 `language === 'en'` 對應段落，並在 change log 註明與官方翻譯來源。
+
+5. 現階段排程  
+   - 本檔目前只記錄設計與文案切分原則，尚未實際修改任何 `.tsx` 檔案。  
+   - 下一步（待你確認後執行）：  
+     1. 在 `App.tsx` 實作 `language` 狀態與 `LanguageToggle`。  
+     2. 逐頁將中英文文案改為依 `language` 切換顯示。  
+     3. 完成後更新下方「文案潤色建議」區塊的進度與備註。
+
+---
+
+# 文案潤色建議（舊版紀錄，已根據需要執行）
 
 以下按畫面/元件列出潤色建議。**目前狀態：除特別註明外，所有建議已套用到程式碼中 ✅。**
 
